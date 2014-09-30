@@ -14,31 +14,28 @@ import java.io.FileInputStream;
 
 public class TextMiningWordDocHandler implements DocumentHandler {
 
-  public Document getDocument(InputStream is)
-    throws DocumentHandlerException {
+	public Document getDocument(InputStream is) throws DocumentHandlerException {
 
-    String bodyText = null;
-    try {
-      bodyText = new WordExtractor().extractText(is);
-    }
-    catch (Exception e) {
-      throw new DocumentHandlerException(
-        "Cannot extract text from a Word document", e);
-    }
+		String bodyText = null;
+		try {
+			bodyText = new WordExtractor().extractText(is);
+		} catch (Exception e) {
+			throw new DocumentHandlerException(
+					"Cannot extract text from a Word document", e);
+		}
 
-    if ((bodyText != null) && (bodyText.trim().length() > 0)) {
-      Document doc = new Document();
-      doc.add(Field.UnStored("body", bodyText));
-      return doc;
-    }
-    return null;
-  }
+		if ((bodyText != null) && (bodyText.trim().length() > 0)) {
+			Document doc = new Document();
+			doc.add(Field.UnStored("body", bodyText));
+			return doc;
+		}
+		return null;
+	}
 
-  public static void main(String[] args) throws Exception {
-    TextMiningWordDocHandler handler =
-      new TextMiningWordDocHandler();
-    Document doc = handler.getDocument(
-      new FileInputStream(new File(args[0])));
-    System.out.println(doc);
-  }
+	public static void main(String[] args) throws Exception {
+		TextMiningWordDocHandler handler = new TextMiningWordDocHandler();
+		Document doc = handler.getDocument(new FileInputStream(
+				new File(args[0])));
+		System.out.println(doc);
+	}
 }

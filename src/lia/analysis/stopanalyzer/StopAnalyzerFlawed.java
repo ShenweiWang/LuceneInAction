@@ -14,21 +14,21 @@ import java.util.Set;
  * Stop words actually not necessarily removed due to filtering order
  */
 public class StopAnalyzerFlawed extends Analyzer {
-  private Set stopWords;
+	private Set stopWords;
 
-  public StopAnalyzerFlawed() {
-    stopWords = StopFilter.makeStopSet(StopAnalyzer.ENGLISH_STOP_WORDS);
-  }
+	public StopAnalyzerFlawed() {
+		stopWords = StopFilter.makeStopSet(StopAnalyzer.ENGLISH_STOP_WORDS);
+	}
 
-  public StopAnalyzerFlawed(String[] stopWords) {
-    this.stopWords = StopFilter.makeStopSet(stopWords);
-  }
+	public StopAnalyzerFlawed(String[] stopWords) {
+		this.stopWords = StopFilter.makeStopSet(stopWords);
+	}
 
-  /**
-   * Ordering mistake here
-   */
-  public TokenStream tokenStream(String fieldName, Reader reader) {
-    return new LowerCaseFilter(new StopFilter(new LetterTokenizer(reader),
-        stopWords));
-  }
+	/**
+	 * Ordering mistake here
+	 */
+	public TokenStream tokenStream(String fieldName, Reader reader) {
+		return new LowerCaseFilter(new StopFilter(new LetterTokenizer(reader),
+				stopWords));
+	}
 }

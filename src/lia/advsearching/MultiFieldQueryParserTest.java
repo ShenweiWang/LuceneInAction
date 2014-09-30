@@ -8,32 +8,30 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 
 public class MultiFieldQueryParserTest extends LiaTestCase {
-  public void testDefaultOperator() throws Exception {
-    Query query = MultiFieldQueryParser.parse("development",
-        new String[]{"title", "subject"},
-        new SimpleAnalyzer());
+	public void testDefaultOperator() throws Exception {
+		Query query = MultiFieldQueryParser.parse("development", new String[] {
+				"title", "subject" }, new SimpleAnalyzer());
 
-    IndexSearcher searcher = new IndexSearcher(directory);
-    Hits hits = searcher.search(query);
+		IndexSearcher searcher = new IndexSearcher(directory);
+		Hits hits = searcher.search(query);
 
-    assertHitsIncludeTitle(hits, "Java Development with Ant");
+		assertHitsIncludeTitle(hits, "Java Development with Ant");
 
-    // has "development" in the subject field
-    assertHitsIncludeTitle(hits, "Extreme Programming Explained");
-  }
+		// has "development" in the subject field
+		assertHitsIncludeTitle(hits, "Extreme Programming Explained");
+	}
 
-  public void testSpecifiedOperator() throws Exception {
-    Query query = MultiFieldQueryParser.parse("development",
-        new String[]{"title", "subject"},
-        new int[]{MultiFieldQueryParser.REQUIRED_FIELD,
-                  MultiFieldQueryParser.REQUIRED_FIELD},
-        new SimpleAnalyzer());
+	public void testSpecifiedOperator() throws Exception {
+		Query query = MultiFieldQueryParser.parse("development", new String[] {
+				"title", "subject" }, new int[] {
+				MultiFieldQueryParser.REQUIRED_FIELD,
+				MultiFieldQueryParser.REQUIRED_FIELD }, new SimpleAnalyzer());
 
-    IndexSearcher searcher = new IndexSearcher(directory);
-    Hits hits = searcher.search(query);
+		IndexSearcher searcher = new IndexSearcher(directory);
+		Hits hits = searcher.search(query);
 
-    assertHitsIncludeTitle(hits, "Java Development with Ant");
-    assertEquals("one and only one", 1, hits.length());
-  }
+		assertHitsIncludeTitle(hits, "Java Development with Ant");
+		assertEquals("one and only one", 1, hits.length());
+	}
 
 }

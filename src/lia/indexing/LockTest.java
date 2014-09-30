@@ -14,53 +14,49 @@ import java.io.IOException;
  */
 public class LockTest extends TestCase {
 
-  private Directory dir;
+	private Directory dir;
 
-  protected void setUp() throws IOException {
-    String indexDir =
-      System.getProperty("java.io.tmpdir", "tmp") +
-      System.getProperty("file.separator") + "index";
-    dir = FSDirectory.getDirectory(indexDir, true);
-  }
+	protected void setUp() throws IOException {
+		String indexDir = System.getProperty("java.io.tmpdir", "tmp")
+				+ System.getProperty("file.separator") + "index";
+		dir = FSDirectory.getDirectory(indexDir, true);
+	}
 
-  public void testWriteLock() throws IOException {
-    IndexWriter writer1 = null;
-    IndexWriter writer2 = null;
-    boolean gotException = false;
+	public void testWriteLock() throws IOException {
+		IndexWriter writer1 = null;
+		IndexWriter writer2 = null;
+		boolean gotException = false;
 
-    try {
-      writer1 = new IndexWriter(dir, new SimpleAnalyzer(), true);
-      writer2 = new IndexWriter(dir, new SimpleAnalyzer(), true);
+		try {
+			writer1 = new IndexWriter(dir, new SimpleAnalyzer(), true);
+			writer2 = new IndexWriter(dir, new SimpleAnalyzer(), true);
 
-      fail("We should never reach this point");
-    }
-    catch (IOException e) {
-      gotException = true;
-      // we are expecting IOException
-      // uncomment to see the full exception stack trace
-      // e.printStackTrace();
-    }
-    finally {
-      writer1.close();
-      assertNull(writer2);
-      assertTrue(gotException);
-    }
-  }
+			fail("We should never reach this point");
+		} catch (IOException e) {
+			gotException = true;
+			// we are expecting IOException
+			// uncomment to see the full exception stack trace
+			// e.printStackTrace();
+		} finally {
+			writer1.close();
+			assertNull(writer2);
+			assertTrue(gotException);
+		}
+	}
 
-  public void testCommitLock() throws IOException {
-    IndexReader reader1 = null;
-    IndexReader reader2 = null;
+	public void testCommitLock() throws IOException {
+		IndexReader reader1 = null;
+		IndexReader reader2 = null;
 
-    try {
-      IndexWriter writer = new IndexWriter(dir,
-        new SimpleAnalyzer(), true);
-      writer.close();
-      reader1 = IndexReader.open(dir);
-      reader2 = IndexReader.open(dir);
-    }
-    finally {
-      reader1.close();
-      reader2.close();
-    }
-  }
+		try {
+			IndexWriter writer = new IndexWriter(dir, new SimpleAnalyzer(),
+					true);
+			writer.close();
+			reader1 = IndexReader.open(dir);
+			reader2 = IndexReader.open(dir);
+		} finally {
+			reader1.close();
+			reader2.close();
+		}
+	}
 }

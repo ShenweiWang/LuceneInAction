@@ -13,28 +13,28 @@ import org.apache.lucene.queryParser.ParseException;
 import java.io.IOException;
 
 public class UsingAnalyzersExample {
-    /**
-     * This method doesn't do anything, except compile correctly.
-     * This is used to show snippets of how Analyzers are used.
-     */
-    public void someMethod() throws IOException, ParseException {
-        RAMDirectory directory = new RAMDirectory();
+	/**
+	 * This method doesn't do anything, except compile correctly. This is used
+	 * to show snippets of how Analyzers are used.
+	 */
+	public void someMethod() throws IOException, ParseException {
+		RAMDirectory directory = new RAMDirectory();
 
-        Analyzer analyzer = new StandardAnalyzer();
-        IndexWriter writer = new IndexWriter(directory, analyzer, true);
+		Analyzer analyzer = new StandardAnalyzer();
+		IndexWriter writer = new IndexWriter(directory, analyzer, true);
 
-        Document doc = new Document();
-        doc.add(Field.Text("title", "This is the title"));
-        doc.add(Field.UnStored("contents", "...document contents..."));
-        writer.addDocument(doc);
+		Document doc = new Document();
+		doc.add(Field.Text("title", "This is the title"));
+		doc.add(Field.UnStored("contents", "...document contents..."));
+		writer.addDocument(doc);
 
-        writer.addDocument(doc, analyzer);
+		writer.addDocument(doc, analyzer);
 
-        String expression = "some query";
+		String expression = "some query";
 
-        Query query = QueryParser.parse(expression, "contents", analyzer);
+		Query query = QueryParser.parse(expression, "contents", analyzer);
 
-        QueryParser parser = new QueryParser("contents", analyzer);
-        query = parser.parse(expression);
-    }
+		QueryParser parser = new QueryParser("contents", analyzer);
+		query = parser.parse(expression);
+	}
 }

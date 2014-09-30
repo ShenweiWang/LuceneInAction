@@ -10,24 +10,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookLinkCollector extends HitCollector {
-  private IndexSearcher searcher;
-  private HashMap documents = new HashMap();
+	private IndexSearcher searcher;
+	private HashMap documents = new HashMap();
 
-  public BookLinkCollector(IndexSearcher searcher) {
-    this.searcher = searcher;
-  }
+	public BookLinkCollector(IndexSearcher searcher) {
+		this.searcher = searcher;
+	}
 
-  public void collect(int id, float score) {
-    try {
-      Document doc = searcher.doc(id);
-      documents.put(doc.get("url"), doc.get("title"));
-      System.out.println(doc.get("title") + ":" + score);
-    } catch (IOException e) {
-      // ignore
-    }
-  }
+	public void collect(int id, float score) {
+		try {
+			Document doc = searcher.doc(id);
+			documents.put(doc.get("url"), doc.get("title"));
+			System.out.println(doc.get("title") + ":" + score);
+		} catch (IOException e) {
+			// ignore
+		}
+	}
 
-  public Map getLinks() {
-    return Collections.unmodifiableMap(documents);
-  }
+	public Map getLinks() {
+		return Collections.unmodifiableMap(documents);
+	}
 }

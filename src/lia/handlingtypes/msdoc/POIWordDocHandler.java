@@ -16,35 +16,33 @@ import java.io.PrintWriter;
 
 public class POIWordDocHandler implements DocumentHandler {
 
-  public Document getDocument(InputStream is)
-    throws DocumentHandlerException {
+	public Document getDocument(InputStream is) throws DocumentHandlerException {
 
-    String bodyText = null;
+		String bodyText = null;
 
-    try {
-      WordDocument wd = new WordDocument(is);
-      StringWriter docTextWriter = new StringWriter();
-      wd.writeAllText(new PrintWriter(docTextWriter));
-      docTextWriter.close();
-      bodyText = docTextWriter.toString();
-    }
-    catch (Exception e) {
-      throw new DocumentHandlerException(
-        "Cannot extract text from a Word document", e);
-    }
+		try {
+			WordDocument wd = new WordDocument(is);
+			StringWriter docTextWriter = new StringWriter();
+			wd.writeAllText(new PrintWriter(docTextWriter));
+			docTextWriter.close();
+			bodyText = docTextWriter.toString();
+		} catch (Exception e) {
+			throw new DocumentHandlerException(
+					"Cannot extract text from a Word document", e);
+		}
 
-    if ((bodyText != null) && (bodyText.trim().length() > 0)) {
-      Document doc = new Document();
-      doc.add(Field.UnStored("body", bodyText));
-      return doc;
-    }
-    return null;
-  }
+		if ((bodyText != null) && (bodyText.trim().length() > 0)) {
+			Document doc = new Document();
+			doc.add(Field.UnStored("body", bodyText));
+			return doc;
+		}
+		return null;
+	}
 
-  public static void main(String[] args) throws Exception {
-    POIWordDocHandler handler = new POIWordDocHandler();
-    Document doc = handler.getDocument(
-      new FileInputStream(new File(args[0])));
-    System.out.println(doc);
-  }
+	public static void main(String[] args) throws Exception {
+		POIWordDocHandler handler = new POIWordDocHandler();
+		Document doc = handler.getDocument(new FileInputStream(
+				new File(args[0])));
+		System.out.println(doc);
+	}
 }

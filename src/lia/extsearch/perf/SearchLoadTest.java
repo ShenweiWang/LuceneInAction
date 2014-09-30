@@ -12,43 +12,43 @@ import junit.framework.TestSuite;
  */
 public class SearchLoadTest {
 
-  public static Test suite() {
+	public static Test suite() {
 
-    int maxTimeInMillis = 100;
-    int concurrentUsers = 10;
+		int maxTimeInMillis = 100;
+		int concurrentUsers = 10;
 
-    //Test test = new SearchTest("testSearchByTimestamp");
-    Test test = new SearchTest("testSearchByDay");
+		// Test test = new SearchTest("testSearchByTimestamp");
+		Test test = new SearchTest("testSearchByDay");
 
-    TestSuite suite = new TestSuite();
-    suite.addTest(test); // runs first to warm up the cache
-    Test timedTest = new TimedTest(test, maxTimeInMillis);
-    LoadTest loadTest = new LoadTest(timedTest, concurrentUsers);
-    suite.addTest(loadTest);
+		TestSuite suite = new TestSuite();
+		suite.addTest(test); // runs first to warm up the cache
+		Test timedTest = new TimedTest(test, maxTimeInMillis);
+		LoadTest loadTest = new LoadTest(timedTest, concurrentUsers);
+		suite.addTest(loadTest);
 
-    return suite;
+		return suite;
 
-    //
-    // Use this to ensure that the index is
-    // created before the performance test.
-    //
-    //return makeTestFixture(suite);
-  }
+		//
+		// Use this to ensure that the index is
+		// created before the performance test.
+		//
+		// return makeTestFixture(suite);
+	}
 
-  public static Test makeTestFixture(Test test) {
+	public static Test makeTestFixture(Test test) {
 
-    TestSetup oneTimer = new TestSetup(test) {
+		TestSetup oneTimer = new TestSetup(test) {
 
-      public void setUp() throws Exception {
-        IndexBuilder builder = new IndexBuilder();
-        builder.buildIndex(1000);
-      }
-    };
+			public void setUp() throws Exception {
+				IndexBuilder builder = new IndexBuilder();
+				builder.buildIndex(1000);
+			}
+		};
 
-    return oneTimer;
-  }
+		return oneTimer;
+	}
 
-  public static void main(String args[]) {
-    junit.textui.TestRunner.run(suite());
-  }
+	public static void main(String args[]) {
+		junit.textui.TestRunner.run(suite());
+	}
 }

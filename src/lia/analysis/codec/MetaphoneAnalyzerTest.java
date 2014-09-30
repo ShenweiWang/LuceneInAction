@@ -15,50 +15,46 @@ import org.apache.lucene.queryParser.QueryParser;
 import java.io.IOException;
 
 public class MetaphoneAnalyzerTest extends TestCase {
-  public void testFilter() throws Exception {
-    Token[] tokens =
-      AnalyzerUtils.tokensFromAnalysis(
-                          new MetaphoneInjectionAnalyzer(), "cool cat");
+	public void testFilter() throws Exception {
+		Token[] tokens = AnalyzerUtils.tokensFromAnalysis(
+				new MetaphoneInjectionAnalyzer(), "cool cat");
 
-    AnalyzerUtils.assertTokensEqual(tokens,
-                      new String[]{ "cool", "KL", "cat", "KT" });
+		AnalyzerUtils.assertTokensEqual(tokens, new String[] { "cool", "KL",
+				"cat", "KT" });
 
-    assertEquals(1, tokens[0].getPositionIncrement());
-    assertEquals(0, tokens[1].getPositionIncrement());
-  }
+		assertEquals(1, tokens[0].getPositionIncrement());
+		assertEquals(0, tokens[1].getPositionIncrement());
+	}
 
-  public void testKoolKat() throws Exception {
-    RAMDirectory directory = new RAMDirectory();
-    Analyzer analyzer = new MetaphoneReplacementAnalyzer();
+	public void testKoolKat() throws Exception {
+		RAMDirectory directory = new RAMDirectory();
+		Analyzer analyzer = new MetaphoneReplacementAnalyzer();
 
-    IndexWriter writer = new IndexWriter(directory, analyzer, true);
+		IndexWriter writer = new IndexWriter(directory, analyzer, true);
 
-    Document doc = new Document();
-    doc.add(Field.Text("contents", "cool cat"));
-    writer.addDocument(doc);
-    writer.close();
+		Document doc = new Document();
+		doc.add(Field.Text("contents", "cool cat"));
+		writer.addDocument(doc);
+		writer.close();
 
-    IndexSearcher searcher = new IndexSearcher(directory);
-    Query query = QueryParser.parse("kool kat",
-                                    "contents",
-                                    analyzer);
+		IndexSearcher searcher = new IndexSearcher(directory);
+		Query query = QueryParser.parse("kool kat", "contents", analyzer);
 
-    Hits hits = searcher.search(query);
+		Hits hits = searcher.search(query);
 
-    assertEquals(1, hits.length());
-    assertEquals("cool cat", hits.doc(0).get("contents"));
+		assertEquals(1, hits.length());
+		assertEquals("cool cat", hits.doc(0).get("contents"));
 
-    searcher.close();
-  }
+		searcher.close();
+	}
 
-  public static void main(String[] args) throws IOException {
-    MetaphoneReplacementAnalyzer analyzer =
-                                 new MetaphoneReplacementAnalyzer();
-    AnalyzerUtils.displayTokens(analyzer,
-                   "The quick brown fox jumped over the lazy dogs");
+	public static void main(String[] args) throws IOException {
+		MetaphoneReplacementAnalyzer analyzer = new MetaphoneReplacementAnalyzer();
+		AnalyzerUtils.displayTokens(analyzer,
+				"The quick brown fox jumped over the lazy dogs");
 
-    System.out.println("");
-    AnalyzerUtils.displayTokens(analyzer,
-                   "Tha quik brown phox jumpd ovvar tha lazi dogz");
-  }
+		System.out.println("");
+		AnalyzerUtils.displayTokens(analyzer,
+				"Tha quik brown phox jumpd ovvar tha lazi dogz");
+	}
 }

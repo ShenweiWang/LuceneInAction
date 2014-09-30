@@ -14,50 +14,49 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
 public class BerkeleyDbIndexer {
-  public static void main(String[] args) throws IOException, DbException {
-    if (args.length != 1) {
-      System.err.println("Usage: BerkeleyDbIndexer <index dir>");
-      System.exit(-1);
-    }
-    String indexDir = args[0];
+	public static void main(String[] args) throws IOException, DbException {
+		if (args.length != 1) {
+			System.err.println("Usage: BerkeleyDbIndexer <index dir>");
+			System.exit(-1);
+		}
+		String indexDir = args[0];
 
-    DbEnv env = new DbEnv(0);
-    Db index = new Db(env, 0);
-    Db blocks = new Db(env, 0);
-    File dbHome = new File(indexDir);
-    int flags = Db.DB_CREATE;
+		DbEnv env = new DbEnv(0);
+		Db index = new Db(env, 0);
+		Db blocks = new Db(env, 0);
+		File dbHome = new File(indexDir);
+		int flags = Db.DB_CREATE;
 
-    if (dbHome.exists()) {
-      File[] files = dbHome.listFiles();
+		if (dbHome.exists()) {
+			File[] files = dbHome.listFiles();
 
-      for (int i = 0; i < files.length; i++)
-        if (files[i].getName().startsWith("__"))
-          files[i].delete();
-      dbHome.delete();
-    }
+			for (int i = 0; i < files.length; i++)
+				if (files[i].getName().startsWith("__"))
+					files[i].delete();
+			dbHome.delete();
+		}
 
-    dbHome.mkdir();
+		dbHome.mkdir();
 
-    env.open(indexDir, Db.DB_INIT_MPOOL | flags, 0);
-    index.open(null, "__index__", null, Db.DB_BTREE, flags, 0);
-    blocks.open(null, "__blocks__", null, Db.DB_BTREE, flags, 0);
+		env.open(indexDir, Db.DB_INIT_MPOOL | flags, 0);
+		index.open(null, "__index__", null, Db.DB_BTREE, flags, 0);
+		blocks.open(null, "__blocks__", null, Db.DB_BTREE, flags, 0);
 
-    DbDirectory directory = new DbDirectory(null, index, blocks, 0);
-    IndexWriter writer = new IndexWriter(directory,
-        new StandardAnalyzer(),
-        true);
+		DbDirectory directory = new DbDirectory(null, index, blocks, 0);
+		IndexWriter writer = new IndexWriter(directory, new StandardAnalyzer(),
+				true);
 
-    Document doc = new Document();
-    doc.add(Field.Text("contents", "The quick brown fox..."));
-    writer.addDocument(doc);
+		Document doc = new Document();
+		doc.add(Field.Text("contents", "The quick brown fox..."));
+		writer.addDocument(doc);
 
-    writer.optimize();
-    writer.close();
+		writer.optimize();
+		writer.close();
 
-    index.close(0);
-    blocks.close(0);
-    env.close(0);
+		index.close(0);
+		blocks.close(0);
+		env.close(0);
 
-    System.out.println("Indexing Complete");
-  }
+		System.out.println("Indexing Complete");
+	}
 }

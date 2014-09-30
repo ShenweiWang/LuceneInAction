@@ -19,87 +19,81 @@ import java.util.GregorianCalendar;
  */
 public class IndexBuilder {
 
-  private String byTimestampIndexDirName;
-  private String byDayIndexDirName;
+	private String byTimestampIndexDirName;
+	private String byDayIndexDirName;
 
-  public IndexBuilder() throws Exception {
+	public IndexBuilder() throws Exception {
 
-    String indexDirName = System.getProperty("perf.temp.dir");
-    if (indexDirName == null) {
-      throw new RuntimeException("Property 'perf.temp.dir' not defined!");
-    }
+		String indexDirName = System.getProperty("perf.temp.dir");
+		if (indexDirName == null) {
+			throw new RuntimeException("Property 'perf.temp.dir' not defined!");
+		}
 
-    byTimestampIndexDirName = indexDirName + File.separator + "timestamp";
-    byDayIndexDirName = indexDirName + File.separator + "day";
-  }
+		byTimestampIndexDirName = indexDirName + File.separator + "timestamp";
+		byDayIndexDirName = indexDirName + File.separator + "day";
+	}
 
-  public String byTimestampIndexDirName() {
-    return byTimestampIndexDirName;
-  }
+	public String byTimestampIndexDirName() {
+		return byTimestampIndexDirName;
+	}
 
-  public String byDayIndexDirName() {
-    return byDayIndexDirName;
-  }
+	public String byDayIndexDirName() {
+		return byDayIndexDirName;
+	}
 
-  public void buildIndex(int size) throws Exception {
-    buildIndexByTimestamp(byTimestampIndexDirName(), size);
-    buildIndexByDay(byDayIndexDirName(), size);
-  }
+	public void buildIndex(int size) throws Exception {
+		buildIndexByTimestamp(byTimestampIndexDirName(), size);
+		buildIndexByDay(byDayIndexDirName(), size);
+	}
 
-  public void buildIndexByTimestamp(String dirName, int size)
-      throws Exception {
+	public void buildIndexByTimestamp(String dirName, int size)
+			throws Exception {
 
-    IndexWriter writer = newIndexWriter(dirName);
+		IndexWriter writer = newIndexWriter(dirName);
 
-    Calendar timestamp = GregorianCalendar.getInstance();
-    timestamp.set(Calendar.DATE,
-        timestamp.get(Calendar.DATE) - 1);
-    for (int i = 0; i < size; i++) {
-      timestamp.set(Calendar.SECOND,
-          timestamp.get(Calendar.SECOND) + 1);
-      Date now = timestamp.getTime();
-      Document document = new Document();
-      document.add(Field.Keyword("last-modified", now));
-      writer.addDocument(document);
-    }
+		Calendar timestamp = GregorianCalendar.getInstance();
+		timestamp.set(Calendar.DATE, timestamp.get(Calendar.DATE) - 1);
+		for (int i = 0; i < size; i++) {
+			timestamp.set(Calendar.SECOND, timestamp.get(Calendar.SECOND) + 1);
+			Date now = timestamp.getTime();
+			Document document = new Document();
+			document.add(Field.Keyword("last-modified", now));
+			writer.addDocument(document);
+		}
 
-    writer.close();
-  }
+		writer.close();
+	}
 
-  public void buildIndexByDay(String dirName, int size)
-      throws Exception {
+	public void buildIndexByDay(String dirName, int size) throws Exception {
 
-    String today = Search.today();
+		String today = Search.today();
 
-    IndexWriter writer = newIndexWriter(dirName);
+		IndexWriter writer = newIndexWriter(dirName);
 
-    for (int i = 0; i < size; i++) {
-      Document document = new Document();
-      document.add(Field.Keyword("last-modified", today));
-      writer.addDocument(document);
-    }
+		for (int i = 0; i < size; i++) {
+			Document document = new Document();
+			document.add(Field.Keyword("last-modified", today));
+			writer.addDocument(document);
+		}
 
-    writer.close();
-  }
+		writer.close();
+	}
 
-  private IndexWriter newIndexWriter(String dirName)
-      throws IOException {
-    Directory indexDirectory =
-        FSDirectory.getDirectory(dirName, true);
-    IndexWriter writer =
-        new IndexWriter(indexDirectory,
-            new StandardAnalyzer(), true);
-    return writer;
-  }
+	private IndexWriter newIndexWriter(String dirName) throws IOException {
+		Directory indexDirectory = FSDirectory.getDirectory(dirName, true);
+		IndexWriter writer = new IndexWriter(indexDirectory,
+				new StandardAnalyzer(), true);
+		return writer;
+	}
 
-  public static void main(String args[]) throws Exception {
+	public static void main(String args[]) throws Exception {
 
-    if (args.length != 1) {
-      System.out.println("Usage: IndexBuilder <size>");
-      System.exit(0);
-    }
+		if (args.length != 1) {
+			System.out.println("Usage: IndexBuilder <size>");
+			System.exit(0);
+		}
 
-    IndexBuilder builder = new IndexBuilder();
-    builder.buildIndex(Integer.parseInt(args[0]));
-  }
+		IndexBuilder builder = new IndexBuilder();
+		builder.buildIndex(Integer.parseInt(args[0]));
+	}
 }

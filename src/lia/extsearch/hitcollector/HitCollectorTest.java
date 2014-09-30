@@ -11,20 +11,21 @@ import java.util.Map;
 
 public class HitCollectorTest extends LiaTestCase {
 
-  public void testCollecting() throws Exception {
-    TermQuery query = new TermQuery(new Term("contents", "junit"));
-    IndexSearcher searcher = new IndexSearcher(directory);
+	public void testCollecting() throws Exception {
+		TermQuery query = new TermQuery(new Term("contents", "junit"));
+		IndexSearcher searcher = new IndexSearcher(directory);
 
-    BookLinkCollector collector = new BookLinkCollector(searcher);
-    searcher.search(query, collector);
+		BookLinkCollector collector = new BookLinkCollector(searcher);
+		searcher.search(query, collector);
 
-    Map linkMap = collector.getLinks();
-    assertEquals("Java Development with Ant",
-                 linkMap.get("http://www.manning.com/antbook"));;
+		Map linkMap = collector.getLinks();
+		assertEquals("Java Development with Ant",
+				linkMap.get("http://www.manning.com/antbook"));
+		;
 
-    Hits hits = searcher.search(query);
-    dumpHits(hits);
+		Hits hits = searcher.search(query);
+		dumpHits(hits);
 
-    searcher.close();
-  }
+		searcher.close();
+	}
 }

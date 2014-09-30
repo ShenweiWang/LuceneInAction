@@ -12,36 +12,31 @@ import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
 public class SearchServer {
-  private static final String ALPHABET =
-      "abcdefghijklmnopqrstuvwxyz";
+	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
-  public static void main(String[] args) throws Exception {
-    if (args.length != 1) {
-      System.err.println("Usage: SearchServer <basedir>");
-      System.exit(-1);
-    }
+	public static void main(String[] args) throws Exception {
+		if (args.length != 1) {
+			System.err.println("Usage: SearchServer <basedir>");
+			System.exit(-1);
+		}
 
-    String basedir = args[0];
-    Searchable[] searchables = new Searchable[ALPHABET.length()];
-    for (int i = 0; i < ALPHABET.length(); i++) {
-      searchables[i] = new IndexSearcher(
-          new File(basedir,
-              "" + ALPHABET.charAt(i)).getAbsolutePath());
-    }
+		String basedir = args[0];
+		Searchable[] searchables = new Searchable[ALPHABET.length()];
+		for (int i = 0; i < ALPHABET.length(); i++) {
+			searchables[i] = new IndexSearcher(new File(basedir, ""
+					+ ALPHABET.charAt(i)).getAbsolutePath());
+		}
 
-    LocateRegistry.createRegistry(1099);
+		LocateRegistry.createRegistry(1099);
 
-    Searcher multiSearcher = new MultiSearcher(searchables);
-    RemoteSearchable multiImpl =
-        new RemoteSearchable(multiSearcher);
-    Naming.rebind("//localhost/LIA_Multi", multiImpl);
+		Searcher multiSearcher = new MultiSearcher(searchables);
+		RemoteSearchable multiImpl = new RemoteSearchable(multiSearcher);
+		Naming.rebind("//localhost/LIA_Multi", multiImpl);
 
-    Searcher parallelSearcher =
-        new ParallelMultiSearcher(searchables);
-    RemoteSearchable parallelImpl =
-        new RemoteSearchable(parallelSearcher);
-    Naming.rebind("//localhost/LIA_Parallel", parallelImpl);
+		Searcher parallelSearcher = new ParallelMultiSearcher(searchables);
+		RemoteSearchable parallelImpl = new RemoteSearchable(parallelSearcher);
+		Naming.rebind("//localhost/LIA_Parallel", parallelImpl);
 
-    System.out.println("Server started");
-  }
+		System.out.println("Server started");
+	}
 }

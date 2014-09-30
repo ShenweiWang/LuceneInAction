@@ -13,30 +13,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class WordNetSynonymEngine implements SynonymEngine {
-  RAMDirectory directory;
-  IndexSearcher searcher;
+	RAMDirectory directory;
+	IndexSearcher searcher;
 
-  public WordNetSynonymEngine(File index) throws IOException {
-    directory = new RAMDirectory(FSDirectory.getDirectory(index, false));
-    searcher = new IndexSearcher(directory);
-  }
+	public WordNetSynonymEngine(File index) throws IOException {
+		directory = new RAMDirectory(FSDirectory.getDirectory(index, false));
+		searcher = new IndexSearcher(directory);
+	}
 
-  public String[] getSynonyms(String word) throws IOException {
+	public String[] getSynonyms(String word) throws IOException {
 
-    ArrayList synList = new ArrayList();
+		ArrayList synList = new ArrayList();
 
-    Hits hits = searcher.search(new TermQuery(new Term("word", word)));
+		Hits hits = searcher.search(new TermQuery(new Term("word", word)));
 
-    for (int i = 0; i < hits.length(); i++) {
-      Document doc = hits.doc(i);
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
 
-      String[] values = doc.getValues("syn");
+			String[] values = doc.getValues("syn");
 
-      for (int j = 0; j < values.length; j++) {
-        synList.add(values[j]);
-      }
-    }
+			for (int j = 0; j < values.length; j++) {
+				synList.add(values[j]);
+			}
+		}
 
-    return (String[]) synList.toArray(new String[0]);
-  }
+		return (String[]) synList.toArray(new String[0]);
+	}
 }

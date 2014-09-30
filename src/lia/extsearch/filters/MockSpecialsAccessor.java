@@ -1,13 +1,13 @@
 package lia.extsearch.filters;
 
 public class MockSpecialsAccessor implements SpecialsAccessor {
-  private String[] isbns;
+	private String[] isbns;
 
-  public MockSpecialsAccessor(String[] isbns) {
-    this.isbns = isbns;
-  }
+	public MockSpecialsAccessor(String[] isbns) {
+		this.isbns = isbns;
+	}
 
-  public String[] isbns() {
-    return isbns;
-  }
+	public String[] isbns() {
+		return isbns;
+	}
 }

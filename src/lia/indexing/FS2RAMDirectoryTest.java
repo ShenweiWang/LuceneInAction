@@ -10,17 +10,17 @@ import java.io.IOException;
  */
 public class FS2RAMDirectoryTest extends BaseIndexingTestCase {
 
-  public void testSlurp() throws IOException {
-    IndexReader fsDirReader = IndexReader.open(dir);
-    assertEquals(keywords.length, fsDirReader.maxDoc());
-    assertEquals(keywords.length, fsDirReader.numDocs());
+	public void testSlurp() throws IOException {
+		IndexReader fsDirReader = IndexReader.open(dir);
+		assertEquals(keywords.length, fsDirReader.maxDoc());
+		assertEquals(keywords.length, fsDirReader.numDocs());
 
-    RAMDirectory ramDir = new RAMDirectory(dir);
-    IndexReader ramDirReader = IndexReader.open(ramDir);
-    assertEquals(fsDirReader.maxDoc(), ramDirReader.maxDoc());
-    assertEquals(fsDirReader.numDocs(), ramDirReader.numDocs());
+		RAMDirectory ramDir = new RAMDirectory(dir);
+		IndexReader ramDirReader = IndexReader.open(ramDir);
+		assertEquals(fsDirReader.maxDoc(), ramDirReader.maxDoc());
+		assertEquals(fsDirReader.numDocs(), ramDirReader.numDocs());
 
-    fsDirReader.close();
-    ramDir.close();
-  }
+		fsDirReader.close();
+		ramDir.close();
+	}
 }

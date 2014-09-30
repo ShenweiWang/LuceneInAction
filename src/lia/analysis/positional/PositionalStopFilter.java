@@ -7,27 +7,26 @@ import java.util.Set;
 import java.io.IOException;
 
 public class PositionalStopFilter extends TokenFilter {
-  private Set stopWords;
+	private Set stopWords;
 
-  public PositionalStopFilter(TokenStream in, Set stopWords) {
-    super(in);
-    this.stopWords = stopWords;
-  }
+	public PositionalStopFilter(TokenStream in, Set stopWords) {
+		super(in);
+		this.stopWords = stopWords;
+	}
 
-  public final Token next() throws IOException {
-    int increment = 0;
-    for (Token token = input.next();
-         token != null; token = input.next()) {
+	public final Token next() throws IOException {
+		int increment = 0;
+		for (Token token = input.next(); token != null; token = input.next()) {
 
-      if (!stopWords.contains(token.termText())) {
-        token.setPositionIncrement(
-            token.getPositionIncrement() + increment);
-        return token;
-      }
+			if (!stopWords.contains(token.termText())) {
+				token.setPositionIncrement(token.getPositionIncrement()
+						+ increment);
+				return token;
+			}
 
-      increment++;
-    }
+			increment++;
+		}
 
-    return null;
-  }
+		return null;
+	}
 }

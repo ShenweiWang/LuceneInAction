@@ -15,38 +15,35 @@ import java.io.FileInputStream;
 
 public class PlainTextHandler implements DocumentHandler {
 
-  public Document getDocument(InputStream is)
-    throws DocumentHandlerException {
+	public Document getDocument(InputStream is) throws DocumentHandlerException {
 
-    String bodyText = "";
+		String bodyText = "";
 
-    try {
-      BufferedReader br =
-        new BufferedReader(new InputStreamReader(is));
-      String line = null;
-      while ((line = br.readLine()) != null) {
-        bodyText += line;
-      }
-      br.close();
-    }
-    catch(IOException e) {
-      throw new DocumentHandlerException(
-        "Cannot read the text document", e);
-    }
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				bodyText += line;
+			}
+			br.close();
+		} catch (IOException e) {
+			throw new DocumentHandlerException("Cannot read the text document",
+					e);
+		}
 
-    if (!bodyText.equals("")) {
-      Document doc = new Document();
-      doc.add(Field.UnStored("body", bodyText));
-      return doc;
-    }
+		if (!bodyText.equals("")) {
+			Document doc = new Document();
+			doc.add(Field.UnStored("body", bodyText));
+			return doc;
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  public static void main(String[] args) throws Exception {
-    PlainTextHandler handler = new PlainTextHandler();
-    Document doc = handler.getDocument(
-      new FileInputStream(new File(args[0])));
-    System.out.println(doc);
-  }
+	public static void main(String[] args) throws Exception {
+		PlainTextHandler handler = new PlainTextHandler();
+		Document doc = handler.getDocument(new FileInputStream(
+				new File(args[0])));
+		System.out.println(doc);
+	}
 }
